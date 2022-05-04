@@ -7,12 +7,16 @@ import Igis
 
 
 class Background : RenderableEntity {
-    var gridHeight = 50
-    var gridWidth = 300
+    
     var rectanglesToRender : [Rectangle] = [Rectangle]()
     var rectangleFillStyles : [FillStyle] = [FillStyle]()
     var rectangleStrokeStyles : [StrokeStyle] = [StrokeStyle]()
 
+    var lineWidth = 20
+    var gridSpace = 250
+    var xPos = 600
+    var yPos = 50
+    
     var ellipsesToRender : [Ellipse] = [Ellipse]()
     var ellipsesFillStyles : [FillStyle] = [FillStyle]()
     var ellipsesStrokeStyles : [StrokeStyle] = [StrokeStyle]()
@@ -31,53 +35,54 @@ class Background : RenderableEntity {
         canvas.render(rectangle);
     }
 
-    func makeText(x: Int, y: Int, text:String) -> Text {
-            var textObject = Text(location:Point(x:x, y:y), text:"\(text)")
-            textObject.font = "70pt Arial"
-            return textObject
-    }
-    func renderOnClick(text: String){
-        textObjects.append(makeText(x:200, y:200, text:"X"))
-    }
 
     init() {
-        func randomColor() -> Color {
-            return Color(red: UInt8.random(in: 0...255), green: UInt8.random(in: 0...255), blue: UInt8.random(in: 0...255))
-        }
-
         func makeRectangle(x:Int, y:Int, width:Int, height:Int) -> Rectangle {
             return Rectangle(rect: Rect(topLeft:Point(x:x,y:y), size:Size(width:width,height:height)), fillMode:.fillAndStroke)
         }
-
-        func makeCircle(x:Int, y:Int, radius:Int) -> Ellipse {
-            return Ellipse(center:Point(x:x,y:y), radiusX: radius, radiusY: radius, fillMode:.fillAndStroke)
-        }
-        
-        func makeEllipse(x:Int, y:Int, radiusX:Int, radiusY:Int) -> Ellipse {
-            return Ellipse(center:Point(x:x,y:y), radiusX: radiusX, radiusY: radiusY, fillMode:.fillAndStroke)
-        }
-
-        
+            
         
         
         
 
         rectangleFillStyles.append(FillStyle(color:Color(.black)))
         rectangleStrokeStyles.append(StrokeStyle(color:Color(.black)))
-        rectanglesToRender.append(makeRectangle(x:gridWidth+350, y:gridHeight+325, width: 610, height: 20))
+        // Horizontal Lines
+        rectanglesToRender.append(makeRectangle(x:xPos, y: yPos + (gridSpace), width: (gridSpace * 3) + (lineWidth * 2), height: lineWidth))
+
         rectangleFillStyles.append(FillStyle(color:Color(.black)))
         rectangleStrokeStyles.append(StrokeStyle(color:Color(.black)))
-        rectanglesToRender.append(makeRectangle(x:gridWidth+350, y:gridHeight+575, width: 610, height: 20))
+
+        rectanglesToRender.append(makeRectangle(x:xPos, y: yPos + ((gridSpace * 2) + lineWidth), width: (gridSpace * 3) + (lineWidth * 2), height: lineWidth))
 
        
         rectangleFillStyles.append(FillStyle(color:Color(.black)))
         rectangleStrokeStyles.append(StrokeStyle(color:Color(.black)))
-        rectanglesToRender.append(makeRectangle(x:gridWidth + 525, y:gridHeight+150, width: 20, height: 600))
+
+        // Vertical Lines
+        rectanglesToRender.append(makeRectangle(x: xPos + ((gridSpace * 2) + lineWidth), y:yPos, width: lineWidth, height: (gridSpace * 3) + (lineWidth * 2)))
+
         rectangleFillStyles.append(FillStyle(color:Color(.black)))
         rectangleStrokeStyles.append(StrokeStyle(color:Color(.black)))
-        rectanglesToRender.append(makeRectangle(x:gridWidth + 775, y:gridHeight+150, width: 20, height:600))
 
-        
+        rectanglesToRender.append(makeRectangle(x:xPos + gridSpace, y:yPos
+                                               , width: lineWidth, height: (gridSpace * 3) + (lineWidth * 2)))
+
+        func getLineWidth() -> Int {
+            return lineWidth
+        }
+
+        func getX() -> Int {
+            return xPos
+        }
+
+        func getY() -> Int {
+            return yPos
+        }
+
+        func getGridSpace() -> Int {
+            return gridSpace
+        }
         
 
  
@@ -101,12 +106,6 @@ class Background : RenderableEntity {
             canvas.render(rectangleFillStyles[x], rectangleStrokeStyles[x], rectanglesToRender[x])
         }
 
-        for x in 0..<ellipsesToRender.count {
-            canvas.render(ellipsesFillStyles[x], ellipsesStrokeStyles[x], ellipsesToRender[x])
-        }
-
-        for x in 0..<textObjects.count {
-            canvas.render(textObjects[x])
-        }
+        
     }
 }
