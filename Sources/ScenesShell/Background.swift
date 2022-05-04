@@ -68,21 +68,7 @@ class Background : RenderableEntity {
         rectanglesToRender.append(makeRectangle(x:xPos + gridSpace, y:yPos
                                                , width: lineWidth, height: (gridSpace * 3) + (lineWidth * 2)))
 
-        func getLineWidth() -> Int {
-            return lineWidth
-        }
-
-        func getX() -> Int {
-            return xPos
-        }
-
-        func getY() -> Int {
-            return yPos
-        }
-
-        func getGridSpace() -> Int {
-            return gridSpace
-        }
+       
         
 
  
@@ -90,7 +76,21 @@ class Background : RenderableEntity {
         super.init(name:"Background")
     }
 
-    
+     func getLineWidth() -> Int {
+         return lineWidth
+     }
+     
+     func getX() -> Int {
+         return xPos
+     }
+     
+     func getY() -> Int {
+         return yPos
+     }
+     
+     func getGridSpace() -> Int {
+         return gridSpace
+     }
 
     override func setup(canvasSize: Size, canvas: Canvas) {
         // Position the ellipse at the center of the canvas

@@ -3,13 +3,23 @@ import Scenes
 import Foundation
 
 class Ball : RenderableEntity, EntityMouseClickHandler {
-    var currentPlayer = "X"
+    var activePlayer = "X" //Cross
     var playerScale = 10
     var xPlayer : Image
     var yPlayer : Image
     var clearingBox : Image
     var background : Background?
 
+    var lineWidth : Int
+    var gridSpace : Int
+    var xPos : Int
+    var yPos : Int
+    
+    
+    
+    
+    var quadrantPoint = Point(x:0, y:0)
+    
     init() {
         // Using a meaningful name can be helpful for debugging
         guard let clearingBoxUrl = URL(string:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs7JymjngWBlKUaY4qul9pyUsfHOoL2Dm6hoShqOU4v92tmLNBV4bz5Quim8x4qKMygas&usqp=CAU") else {
@@ -27,6 +37,13 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         xPlayer = Image(sourceURL:xPlayerUrl)
         yPlayer = Image(sourceURL:yPlayerUrl)
         clearingBox = Image(sourceURL:clearingBoxUrl)
+
+        
+
+        lineWidth = 0
+        gridSpace = 0
+        xPos = 0
+        yPos = 0
         
         super.init(name:"Ball")
     }
@@ -38,14 +55,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     //if let backgrond = background {}
     
     override func setup(canvasSize: Size, canvas: Canvas) {
-       
+        
         canvas.setup(xPlayer)
         canvas.setup(yPlayer)
         canvas.setup(clearingBox)
 
-        clearingBox.renderMode = .destinationRect(Rect(topLeft:Point(x:10, y:10), size:Size(width:210, height:210)))
-        xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:90, y:30), size:Size(width:1200/playerScale, height:2160/playerScale)))
-        yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:1200/playerScale, height:2160/playerScale)))
+        clearingBox.renderMode = .destinationRect(Rect(topLeft:Point(x:0, y:0), size:Size(width:500, height:500)))
+        xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
+        yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:1200/6, height:2160/6)))
      
         dispatcher.registerEntityMouseClickHandler(handler:self)
     }
@@ -55,9 +72,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     }
 
     override func render(canvas:Canvas) {
-        if let background = background {
-            print(background.getX())
-        }
+     
         
         if clearingBox.isReady {
             canvas.render(clearingBox)
@@ -75,30 +90,81 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     
     
     func onEntityMouseClick(globalLocation: Point) {
-       
         
-        if (currentPlayer == "X") {
-            currentPlayer = "O"
+        if let background = background {
+            lineWidth = background.getLineWidth()
+            gridSpace = background.getGridSpace()
+            xPos = background.getX()
+            yPos = background.getY()
+        }
+
+        let clickPoint = Point(x:globalLocation.x - (1200/playerScale)/2, y:globalLocation.y - ((2160/playerScale)/2))
+        
+        if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
+            quadrantPoint.x = xPos + gridSpace/4
+            quadrantPoint.y = yPos + gridSpace/8
             
-            xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:globalLocation.x - (1200/playerScale)/2, y:globalLocation.y - ((2160/playerScale)/2)), size:Size(width:1200/playerScale, height:2160/playerScale)))
+        } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
+            quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
+            quadrantPoint.y = yPos + gridSpace/8
+            
+        } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth{
+            quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
+            quadrantPoint.y = yPos + gridSpace/8
+            
+        }
+        //--------------
+        else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
+            quadrantPoint.x = xPos + gridSpace/4
+            quadrantPoint.y = yPos + gridSpace + gridSpace/8
+            
+        } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
+            quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
+            quadrantPoint.y = yPos + gridSpace + gridSpace/8
+            
+        } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
+            quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
+            quadrantPoint.y = yPos + gridSpace + gridSpace/8
+            
+        }
+        //--------------
+        else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+            quadrantPoint.x = xPos + gridSpace/4
+            quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
+            
+        } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+            quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
+            quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
+            
+        } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+            quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
+            quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
+            
+        }
+
+        
+        
+        if (activePlayer == "X") {
+            activePlayer = "O"
+            
+            xPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
             
             //show who's turn it is to go
-            yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:90, y:30), size:Size(width:1200/playerScale, height:2160/playerScale)))
+            yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
         } else {
             
-            currentPlayer = "X"
+            activePlayer = "X"
 
             
-            yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:globalLocation.x -  (1200/playerScale)/2, y:globalLocation.y - ((2160/playerScale)/2)), size:Size(width:1200/playerScale, height:2160/playerScale)))
+            yPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
             
             //show who's turn it is to go 
-            xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:90, y:30), size:Size(width:1200/playerScale, height:2160/playerScale)))
+            xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
         }
-        
     }
-
+    
     override func boundingRect() -> Rect {
         return Rect(size: Size(width: Int.max, height: Int.max))
     }
