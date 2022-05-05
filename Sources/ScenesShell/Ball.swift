@@ -3,7 +3,7 @@ import Scenes
 import Foundation
 
 class Ball : RenderableEntity, EntityMouseClickHandler {
-    var activePlayer = "X" //Cross
+    //var activePlayer = "X" //Cross
     var playerScale = 10
     var xPlayer : Image
     var yPlayer : Image
@@ -15,8 +15,12 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var xPos : Int
     var yPos : Int
     
-    
-    
+    var count = 1
+    var activePlayer = 1 //Cross
+    var gameState = [0,0,0,0,0,0,0,0,0]
+    let winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+
+    var gameIsActive = true
     
     var quadrantPoint = Point(x:0, y:0)
     
@@ -103,49 +107,49 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace/8
-            
+            gameState[0] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace/8
-            
+            gameState[1] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth{
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace/8
-            
+            gameState[2] = activePlayer
         }
         //--------------
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            
+            gameState[3] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            
+            gameState[4] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            
+            gameState[5] = activePlayer
         }
         //--------------
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            
+            gameState[6] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            
+            gameState[7] = activePlayer
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            
+            gameState[8] = activePlayer
         }
 
         
         
-        if (activePlayer == "X") {
-            activePlayer = "O"
+        if (activePlayer == 1) {
+            activePlayer = 2
             
             xPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
             
@@ -154,7 +158,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             
         } else {
             
-            activePlayer = "X"
+            activePlayer = 1
 
             
             yPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
@@ -163,7 +167,31 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
         }
-    }
+
+        for combination in winningCombinations {
+            if gameState[combination[0]] != 0 &&
+                 gameState[combination[0]] ==
+                 gameState[combination[1]] &&
+                 gameState[combination[1]] ==
+                 gameState[combination[2]] {
+
+                gameIsActive = false
+            
+            }
+
+            for i in gameState {
+                if i == 0 {
+                  gameIsActive = true
+                  break
+                }
+            }
+
+            if gameIsActive == false {
+                print("tie")
+            }
+
+            
+    } }
     
     override func boundingRect() -> Rect {
         return Rect(size: Size(width: Int.max, height: Int.max))
