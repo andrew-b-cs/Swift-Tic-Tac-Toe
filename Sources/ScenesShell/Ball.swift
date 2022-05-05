@@ -14,6 +14,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var gridSpace : Int
     var xPos : Int
     var yPos : Int
+    var placeAllowed = true
     
     var count = 1
     var activePlayer = 1 //Cross
@@ -107,48 +108,95 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace/8
-            gameState[0] = activePlayer
+           
+            if gameState[0] == 0{
+                gameState[0] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace/8
-            gameState[1] = activePlayer
+           
+            if gameState[1] == 0{
+                gameState[1] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth{
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace/8
-            gameState[2] = activePlayer
+
+            if gameState[2] == 0{
+                gameState[2] = activePlayer
+            } else {
+                placeAllowed = false
+            }
+           
         }
         //--------------
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            gameState[3] = activePlayer
+           
+            if gameState[3] == 0{
+                gameState[3] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            gameState[4] = activePlayer
+           
+            if gameState[4] == 0{
+                gameState[4] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
-            gameState[5] = activePlayer
+            
+            if gameState[5] == 0{
+                gameState[5] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         }
         //--------------
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            gameState[6] = activePlayer
+
+            if gameState[6] == 0{
+                gameState[6] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            gameState[7] = activePlayer
+
+            if gameState[7] == 0{
+                gameState[7] = activePlayer
+            } else {
+                placeAllowed = false
+            }
         } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
-            gameState[8] = activePlayer
+
+            if gameState[8] == 0{
+                gameState[8] = activePlayer
+            } else {
+                placeAllowed = false
+            }
+            
         }
 
         
         
-        if (activePlayer == 1) {
+        if (activePlayer == 1 && placeAllowed) {
             activePlayer = 2
             
             xPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
@@ -156,7 +204,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             //show who's turn it is to go
             yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
-        } else {
+        } else if(placeAllowed) {
             
             activePlayer = 1
 
@@ -167,7 +215,9 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
         }
-
+        
+        placeAllowed = true
+        
         for combination in winningCombinations {
             if gameState[combination[0]] != 0 &&
                  gameState[combination[0]] ==
