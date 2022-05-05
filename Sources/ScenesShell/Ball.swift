@@ -174,8 +174,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
                  gameState[combination[1]] &&
                  gameState[combination[1]] ==
                  gameState[combination[2]] {
-
+                
                 gameIsActive = false
+
+                if gameState[combination[0]] == 1 {
+                    print("x won")
+                } else {
+                    print("o won")
+                }
             
             }
 
