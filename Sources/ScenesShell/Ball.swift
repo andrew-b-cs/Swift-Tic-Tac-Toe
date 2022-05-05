@@ -23,7 +23,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
 
     var gameIsActive = true
     
-    var quadrantPoint = Point(x:0, y:0)
+    var quadrantPoint = Point(x:-1000, y:0)
     
     init() {
         // Using a meaningful name can be helpful for debugging
@@ -164,7 +164,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             }
         }
         //--------------
-        else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+        else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*3 {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
 
@@ -173,7 +173,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             } else {
                 placeAllowed = false
             }
-        } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+        } else if clickPoint.x < xPos + (gridSpace * 2) - lineWidth*2 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*3 {
             quadrantPoint.x = xPos + gridSpace + gridSpace/4 + lineWidth
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
 
@@ -182,7 +182,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             } else {
                 placeAllowed = false
             }
-        } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*2 {
+        } else if clickPoint.x < xPos + (gridSpace * 3) - lineWidth*2  && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*3 {
             quadrantPoint.x = xPos + gridSpace*2 + gridSpace/4 + lineWidth*2
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
 
