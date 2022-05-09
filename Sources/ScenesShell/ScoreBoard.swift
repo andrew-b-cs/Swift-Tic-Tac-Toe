@@ -11,6 +11,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var background : Background?
     var xWin : Image
     var yWin : Image
+
     
     var lineWidth : Int //Width of each scoreboard line, used for rendering scoreboard and snapping player moves to each board position
     var gridSpace : Int //The width of the space inside each scoreboard box, used for rendering scoreboard and snapping player moves to each board position 
@@ -51,12 +52,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             fatalError("Failed to crate URL")
         }
 
+
         //create images to be rendered on screen
         xPlayer = Image(sourceURL:xPlayerUrl)
         yPlayer = Image(sourceURL:yPlayerUrl)
         clearingBox = Image(sourceURL:clearingBoxUrl)
         xWin = Image(sourceURL:xWinUrl)
         yWin = Image(sourceURL:yWinUrl)
+
         
         //temporary variables, used for grid snapping and grid positioning
         lineWidth = 0
@@ -82,12 +85,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         canvas.setup(xWin)
         canvas.setup(yWin)
 
+
         //sets a starting posittion for each image
         clearingBox.renderMode = .destinationRect(Rect(topLeft:Point(x:0, y:0), size:Size(width:500, height:500)))
         xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
         yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:1200/6, height:2160/6)))
         xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:495, height:126)))
         yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:502, height:123)))
+
      
         dispatcher.registerEntityMouseClickHandler(handler:self)
     }
@@ -103,11 +108,11 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             canvas.render(clearingBox)
         }
         
-        if xPlayer.isReady {
+        if xPlayer.isReady && !isGameOver {
             canvas.render(xPlayer)
         }
 
-        if yPlayer.isReady {
+        if yPlayer.isReady && !isGameOver {
             canvas.render(yPlayer)
         }
 
@@ -263,13 +268,13 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
                 if gameState[combination[0]] == 1 {
                     print("x won")
                     isGameOver = true
-                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:yPos + gridSpace + gridSpace/3), size:Size(width:495, height:126)))
+                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace), size:Size(width:495, height:126)))
 
 
                 } else {
                     print("o won")
                     isGameOver = true
-                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:yPos + gridSpace + gridSpace/3), size:Size(width:502, height:123)))
+                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace), size:Size(width:502, height:123)))
                 }
             
             }
