@@ -30,7 +30,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var quadrantPoint = Point(x:-1000, y:0)
     
     init() {
-        // Using a meaningful name can be helpful for debugging
+        //create URLs for the images to render on screen
         guard let clearingBoxUrl = URL(string:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs7JymjngWBlKUaY4qul9pyUsfHOoL2Dm6hoShqOU4v92tmLNBV4bz5Quim8x4qKMygas&usqp=CAU") else {
             fatalError("Failed to crate URL")
         }
@@ -50,14 +50,15 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         guard let yWinUrl = URL(string:"https://media.discordapp.net/attachments/928131884247036015/973082920455655464/unknown.png") else {
             fatalError("Failed to crate URL")
         }
-        
+
+        //create images to be rendered on screen
         xPlayer = Image(sourceURL:xPlayerUrl)
         yPlayer = Image(sourceURL:yPlayerUrl)
         clearingBox = Image(sourceURL:clearingBoxUrl)
         xWin = Image(sourceURL:xWinUrl)
         yWin = Image(sourceURL:yWinUrl)
         
-
+        //temporary variables, used for grid snapping and grid positioning
         lineWidth = 0
         gridSpace = 0
         xPos = 0
@@ -70,16 +71,18 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         self.background = layer
     }
 
-    //if let backgrond = background {}
+    
     
     override func setup(canvasSize: Size, canvas: Canvas) {
-        
+
+        //sets up each image in canvas
         canvas.setup(xPlayer)
         canvas.setup(yPlayer)
         canvas.setup(clearingBox)
         canvas.setup(xWin)
         canvas.setup(yWin)
 
+        //sets a starting posittion for each image
         clearingBox.renderMode = .destinationRect(Rect(topLeft:Point(x:0, y:0), size:Size(width:500, height:500)))
         xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
         yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:1200/6, height:2160/6)))
@@ -95,7 +98,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
 
     override func render(canvas:Canvas) {
      
-        
+        //renders all images each render frame
         if clearingBox.isReady {
             canvas.render(clearingBox)
         }
@@ -120,10 +123,11 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     
     
     func onEntityMouseClick(globalLocation: Point) {
-        
+
+        //gets the tic tac toe board attributes from Background.swift
         if let background = background {
             lineWidth = background.getLineWidth()
-            gridSpace = background.getGridSpace()
+            gridSpace = background.getGridSpace() //length and width of each grid space
             xPos = background.getX()
             yPos = background.getY()
         }
@@ -259,13 +263,13 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
                 if gameState[combination[0]] == 1 {
                     print("x won")
                     isGameOver = true
-                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos + gridSpace*4 - lineWidth * 6, y:yPos + gridSpace + gridSpace/3), size:Size(width:495, height:126)))
+                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:yPos + gridSpace + gridSpace/3), size:Size(width:495, height:126)))
 
 
                 } else {
                     print("o won")
                     isGameOver = true
-                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos + gridSpace*4 - lineWidth * 6, y:yPos + gridSpace + gridSpace/3), size:Size(width:502, height:123)))
+                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:yPos + gridSpace + gridSpace/3), size:Size(width:502, height:123)))
                 }
             
             }

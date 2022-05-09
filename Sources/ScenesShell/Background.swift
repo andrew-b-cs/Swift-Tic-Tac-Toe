@@ -17,10 +17,10 @@ class Background : RenderableEntity {
     var xPos = 600
     var yPos = 50
     
-    var ellipsesToRender : [Ellipse] = [Ellipse]()
-    var ellipsesFillStyles : [FillStyle] = [FillStyle]()
-    var ellipsesStrokeStyles : [StrokeStyle] = [StrokeStyle]()
-    var textObjects : [Text] = [Text]()
+
+
+
+
     
     var screenSize : Size = Size(width: 0, height: 0)
 
@@ -76,6 +76,7 @@ class Background : RenderableEntity {
         super.init(name:"Background")
     }
 
+    //functions to pass in variables to ScoreBoard.swift 
      func getLineWidth() -> Int {
          return lineWidth
      }
