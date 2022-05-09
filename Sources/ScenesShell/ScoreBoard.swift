@@ -12,17 +12,18 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var xWin : Image
     var yWin : Image
     
-    var lineWidth : Int
-    var gridSpace : Int
-    var xPos : Int
-    var yPos : Int
-    var placeAllowed = true
-    var isGameOver = false
+    var lineWidth : Int //Width of each scoreboard line, used for rendering scoreboard and snapping player moves to each board position
+    var gridSpace : Int //The width of the space inside each scoreboard box, used for rendering scoreboard and snapping player moves to each board position 
+    var xPos : Int //X positition of the scoreboard 
+    var yPos : Int //Y posittion of the scoreboard
+    var placeAllowed = true //A boolean to determine whether the box a player is trying to go in is already full
+    var isGameOver = false //A boolean to determine if the game is over
     
     var count = 1
-    var activePlayer = 1 //Cross
-    var gameState = [0,0,0,0,0,0,0,0,0]
-    let winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
+    var activePlayer = 1 //1 = "X", 2 = "O"
+    var gameState = [0,0,0,0,0,0,0,0,0] //current board state
+    //all possible winning combinations for X and O
+    let winningCombinations = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]] 
 
     var gameIsActive = true
     
@@ -129,6 +130,8 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
 
         let clickPoint = Point(x:globalLocation.x - (1200/playerScale)/2, y:globalLocation.y - ((2160/playerScale)/2))
         if !isGameOver {
+
+        //code for the top 3 rows of the grid
         if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace/8
@@ -159,6 +162,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
            
         }
         //--------------
+        //code for the middle 3 rows of the grid
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*2 + gridSpace {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace + gridSpace/8
@@ -188,6 +192,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             }
         }
         //--------------
+        //code for the bottom 3 rows of the grid
         else if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth*3 + gridSpace*3 {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace*2 + gridSpace/8 + lineWidth
