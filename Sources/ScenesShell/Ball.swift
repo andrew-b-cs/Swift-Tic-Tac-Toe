@@ -9,12 +9,15 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
     var yPlayer : Image
     var clearingBox : Image
     var background : Background?
-
+    var xWin : Image
+    var yWin : Image
+    
     var lineWidth : Int
     var gridSpace : Int
     var xPos : Int
     var yPos : Int
     var placeAllowed = true
+    var isGameOver = false
     
     var count = 1
     var activePlayer = 1 //Cross
@@ -38,11 +41,20 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         guard let yPlayerUrl = URL(string:"https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Letter_o.svg/1085px-Letter_o.svg.png") else {
             fatalError("Failed to crate URL")
         }
+
+        guard let xWinUrl = URL(string:"https://media.discordapp.net/attachments/928131884247036015/973082883545772072/unknown.png") else {
+            fatalError("Failed to crate URL")
+        }
+
+        guard let yWinUrl = URL(string:"https://media.discordapp.net/attachments/928131884247036015/973082920455655464/unknown.png") else {
+            fatalError("Failed to crate URL")
+        }
         
         xPlayer = Image(sourceURL:xPlayerUrl)
         yPlayer = Image(sourceURL:yPlayerUrl)
         clearingBox = Image(sourceURL:clearingBoxUrl)
-
+        xWin = Image(sourceURL:xWinUrl)
+        yWin = Image(sourceURL:yWinUrl)
         
 
         lineWidth = 0
@@ -64,10 +76,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         canvas.setup(xPlayer)
         canvas.setup(yPlayer)
         canvas.setup(clearingBox)
+        canvas.setup(xWin)
+        canvas.setup(yWin)
 
         clearingBox.renderMode = .destinationRect(Rect(topLeft:Point(x:0, y:0), size:Size(width:500, height:500)))
         xPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
         yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:1200/6, height:2160/6)))
+        xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:495, height:126)))
+        yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:-1000, y:0), size:Size(width:502, height:123)))
      
         dispatcher.registerEntityMouseClickHandler(handler:self)
     }
@@ -90,6 +106,14 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         if yPlayer.isReady {
             canvas.render(yPlayer)
         }
+
+        if xWin.isReady {
+            canvas.render(xWin)
+        }
+
+        if yWin.isReady {
+            canvas.render(yWin)
+        }
     }
 
     
@@ -104,7 +128,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
         }
 
         let clickPoint = Point(x:globalLocation.x - (1200/playerScale)/2, y:globalLocation.y - ((2160/playerScale)/2))
-        
+        if !isGameOver {
         if clickPoint.x < xPos + gridSpace - lineWidth*3 && clickPoint.y < yPos + gridSpace/2 + lineWidth {
             quadrantPoint.x = xPos + gridSpace/4
             quadrantPoint.y = yPos + gridSpace/8
@@ -193,10 +217,10 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             }
             
         }
-
+        }
         
         
-        if (activePlayer == 1 && placeAllowed) {
+        if (activePlayer == 1 && placeAllowed && !isGameOver) {
             activePlayer = 2
             
             xPlayer.renderMode = .destinationRect(Rect(topLeft:quadrantPoint, size:Size(width:1200/playerScale, height:2160/playerScale)))
@@ -204,7 +228,7 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             //show who's turn it is to go
             yPlayer.renderMode = .destinationRect(Rect(topLeft:Point(x:120, y:30), size:Size(width:1200/6, height:2160/6)))
             
-        } else if(placeAllowed) {
+        } else if(placeAllowed && !isGameOver) {
             
             activePlayer = 1
 
@@ -229,21 +253,29 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
 
                 if gameState[combination[0]] == 1 {
                     print("x won")
+                    isGameOver = true
+                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos + gridSpace*4 - lineWidth * 6, y:yPos + gridSpace + gridSpace/3), size:Size(width:495, height:126)))
+
+
                 } else {
                     print("o won")
+                    isGameOver = true
+                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos + gridSpace*4 - lineWidth * 6, y:yPos + gridSpace + gridSpace/3), size:Size(width:502, height:123)))
                 }
             
             }
 
             for i in gameState {
                 if i == 0 {
-                  gameIsActive = true
-                  break
-                }
+                    gameIsActive = true
+                } 
+
+                
             }
 
             if gameIsActive == false {
                 print("tie")
+                isGameOver = true
             }
 
             
