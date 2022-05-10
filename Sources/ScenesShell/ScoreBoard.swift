@@ -44,11 +44,11 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             fatalError("Failed to crate URL")
         }
 
-        guard let xWinUrl = URL(string:"https://media.discordapp.net/attachments/928131884247036015/973082883545772072/unknown.png") else {
+        guard let xWinUrl = URL(string:"https://codermerlin.com/users/andrew-bourinski/unknown-16.png") else {
             fatalError("Failed to crate URL")
         }
 
-        guard let yWinUrl = URL(string:"https://media.discordapp.net/attachments/928131884247036015/973082920455655464/unknown.png") else {
+        guard let yWinUrl = URL(string:"https://codermerlin.com/users/andrew-bourinski/unknown-18.png") else {
             fatalError("Failed to crate URL")
         }
 
@@ -108,11 +108,11 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
             canvas.render(clearingBox)
         }
         
-        if xPlayer.isReady && !isGameOver {
+        if xPlayer.isReady {
             canvas.render(xPlayer)
         }
 
-        if yPlayer.isReady && !isGameOver {
+        if yPlayer.isReady {
             canvas.render(yPlayer)
         }
 
@@ -268,13 +268,13 @@ class Ball : RenderableEntity, EntityMouseClickHandler {
                 if gameState[combination[0]] == 1 {
                     print("x won")
                     isGameOver = true
-                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace), size:Size(width:495, height:126)))
+                    xWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace*2), size:Size(width:495, height:126)))
 
 
                 } else {
                     print("o won")
                     isGameOver = true
-                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace), size:Size(width:502, height:123)))
+                    yWin.renderMode = .destinationRect(Rect(topLeft:Point(x:xPos - gridSpace*2 - lineWidth*3, y:gridSpace*2), size:Size(width:502, height:123)))
                 }
             
             }
